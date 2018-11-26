@@ -23,6 +23,8 @@ app.get('/location', (request, response) => {
 app.get('/weather', getWeather);
 app.get('/movies', getMovies);
 app.get('/yelp', getYelp);
+app.get('/meetups', getMeetups);
+app.get('/trails', getTrails);
 
 // Make sure the server is listening for requests
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
@@ -62,6 +64,25 @@ function Yelp(location) {
   this.rating = location.rating;
   this.price = location.price;
   this.image_url = location.image_url;
+}
+
+function Meetups(meetup) {
+  this.url = meetup.link;
+  this.name = meetup.name;
+  this.host = meetup.host;
+  this.creation_date = meetup.creation_date;
+}
+
+function Trails(trail) {
+  this.url = trail.trail_url;
+  this.name = trail.name;
+  this.location = trail.location;
+  this.distance = trail.length;
+  this.date = trail.condition_time;
+  this.time = trail.condition_time;
+  this.conditions = trail.conditions;
+  this.rating = trail.stars;
+  this.max_rating = trail.star_votes;
 }
 
 // Helper Functions
