@@ -1,27 +1,24 @@
 {
-  "name": "lab-06-back-end",
+  "name": "lab-08",
   "version": "1.0.0",
-  "description": "**Author**: Jared & Jacob\r **Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)",
+  "description": "lab-08 apis",
   "main": "server.js",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaredpattison/lab-06-back-end.git"
+    "url": "git+https://github.com/1anderson2jacob/lab-08.git"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Jacob Anderson",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jaredpattison/lab-06-back-end/issues"
+    "url": "https://github.com/1anderson2jacob/lab-08/issues"
   },
-  "homepage": "https://github.com/jaredpattison/lab-06-back-end#readme",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^6.1.0",
-    "express": "^4.16.4",
-    "superagent": "^4.0.0"
-  }
+  "homepage": "https://github.com/1anderson2jacob/lab-08#readme"
 }
