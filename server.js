@@ -54,7 +54,7 @@ function Movie(movie) {
   this.total_votes = movie.vote_count;
   this.average_votes = movie.vote_average;
   this.popularity = movie.popularity;
-  this.image_url = movie.backdrop_path; //not working
+  this.image_url = `http://image.tmdb.org/t/p/w185${movie.backdrop_path}`; //not working
   this.overview = movie.overview;
 }
 
@@ -117,6 +117,7 @@ function getMovies(request, response) {
   superagent.get(url)
     .then(result => {
       const movieSummaries = result.body.results.map(movie => {
+        console.log(movie);
         return new Movie(movie);
       })
       response.send(movieSummaries);
