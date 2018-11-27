@@ -24,7 +24,7 @@ app.get('/weather', getWeather);
 app.get('/movies', getMovies);
 app.get('/yelp', getYelp);
 app.get('/meetups', getMeetups);
-app.get('/trails', getTrails);
+// app.get('/trails', getTrails);
 
 // Make sure the server is listening for requests
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
@@ -67,23 +67,23 @@ function Yelp(location) {
 }
 
 function Meetups(meetup) {
-  this.url = meetup.link;
+  this.link = meetup.link;
   this.name = meetup.name;
-  this.host = meetup.host;
-  this.creation_date = meetup.creation_date;
+  this.host = meetup.group.name;
+  this.creation_date = meetup.created;
 }
 
-function Trails(trail) {
-  this.url = trail.trail_url;
-  this.name = trail.name;
-  this.location = trail.location;
-  this.distance = trail.length;
-  this.date = trail.condition_time;
-  this.time = trail.condition_time;
-  this.conditions = trail.conditions;
-  this.rating = trail.stars;
-  this.max_rating = trail.star_votes;
-}
+// function Trails(trail) {
+//   this.url = trail.trail_url;
+//   this.name = trail.name;
+//   this.location = trail.location;
+//   this.distance = trail.length;
+//   this.date = trail.condition_time;
+//   this.time = trail.condition_time;
+//   this.conditions = trail.conditions;
+//   this.rating = trail.stars;
+//   this.max_rating = trail.star_votes;
+// }
 
 // Helper Functions
 function searchToLatLong(query) {
@@ -91,6 +91,7 @@ function searchToLatLong(query) {
 
   return superagent.get(url)
     .then(res => {
+      console.log(new Location(query, res))
       return new Location(query, res);
     })
     .catch(error => handleError(error));
@@ -129,9 +130,35 @@ function getYelp(request, response) {
     .set(`authorization`, `Bearer ${process.env.YELP_API_KEY}`)
     .then(result => {
       const yelpSummaries = result.body.businesses.map(location => {
-        return new Yelp(location)
+        return new Yelp(location);
       })
       response.send(yelpSummaries);
     })
     .catch(error => handleError(error, response));
+}
+
+function getMeetups(request, response) {
+  const url = `https://api.meetup.com/find/upcoming_events?sign=true&photo-host=public&lon=${request.query.data.longitude}&page=20&radius=1&lat=${request.query.data.latitude}&key=${process.env.MEETUP_API_KEY}`;
+
+  superagent.get(url)
+    .then(result => {
+      //console.log(result.body.results);
+      const meetupSummaries = result.body.events.map(meetup => {
+        console.log(meetup)
+        return new Meetups(meetup);
+      })
+      //console.log(meetupSummaries)
+      response.send(meetupSummaries);
+    })
+    .catch(error => handleError(error, response));
+}
+
+function getTrails() {
+  // const url = ;
+
+  // superagent.get(url)
+  //   .then(result => {
+
+  //   })
+  //   .catch(error => handleError(error, response));
 }
