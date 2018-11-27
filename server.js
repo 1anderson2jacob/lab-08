@@ -24,7 +24,7 @@ app.get('/weather', getWeather);
 app.get('/movies', getMovies);
 app.get('/yelp', getYelp);
 app.get('/meetups', getMeetups);
-// app.get('/trails', getTrails);
+app.get('/trails', getTrails);
 
 // Make sure the server is listening for requests
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
@@ -70,20 +70,21 @@ function Meetups(meetup) {
   this.link = meetup.link;
   this.name = meetup.name;
   this.host = meetup.group.name;
-  this.creation_date = meetup.created;
+  this.creation_date = new Date(meetup.created * 1000).toString().slice(0, 15);
+  //this.creation_date = meetup.created;
 }
 
-// function Trails(trail) {
-//   this.url = trail.trail_url;
-//   this.name = trail.name;
-//   this.location = trail.location;
-//   this.distance = trail.length;
-//   this.date = trail.condition_time;
-//   this.time = trail.condition_time;
-//   this.conditions = trail.conditions;
-//   this.rating = trail.stars;
-//   this.max_rating = trail.star_votes;
-// }
+function Trails(trail) {
+  this.trail_url = trail.url;
+  this.name = trail.name;
+  this.location = trail.location;
+  this.length = trail.length;
+  this.condition_date = trail.conditionDate;
+  this.condition_time = trail.conditionDate;
+  this.conditions = trail.conditionStatus;
+  this.stars = trail.stars;
+  this.star_votes = trail.starVotes;
+}
 
 // Helper Functions
 function searchToLatLong(query) {
@@ -144,7 +145,6 @@ function getMeetups(request, response) {
     .then(result => {
       //console.log(result.body.results);
       const meetupSummaries = result.body.events.map(meetup => {
-        console.log(meetup)
         return new Meetups(meetup);
       })
       //console.log(meetupSummaries)
@@ -153,12 +153,16 @@ function getMeetups(request, response) {
     .catch(error => handleError(error, response));
 }
 
-function getTrails() {
-  // const url = ;
-
-  // superagent.get(url)
-  //   .then(result => {
-
-  //   })
-  //   .catch(error => handleError(error, response));
+function getTrails(request, response) {
+  const url = `https://www.hikingproject.com/data/get-trails?lat=${request.query.data.latitude}&lon=${request.query.data.longitude}&maxDistance=10&key=${process.env.TRAILS_API_KEY}`;
+  console.log(url);
+  superagent.get(url)
+    .then(result => {
+      const trailSummaries = result.body.trails.map(trail => {
+        //console.log(trail);
+        return new Trails(trail);
+      })
+      response.send(trailSummaries);
+    })
+    .catch(error => handleError(error, response));
 }
